@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title> Sign-Up Form</title>
+    <title>Sign-Up Form</title>
     <style>
         body {
             font-family: Comic Sans MS, Sans-Serif;
@@ -11,7 +11,7 @@
 
         }
         .signup-form {
-            max-width: 650px;
+            max-width: 600px;
             margin: 0 auto;
             padding: 20px;
             border: 1px solid #ddd;
@@ -28,14 +28,11 @@
             margin-bottom: 5px;
         }
         input, select, textarea {
-            width: 500px;
+            width: 450px;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
             transition: border 0.3s;
-        }
-        input:focus, select:focus, textarea:focus {
-            border-color: #00b0f0;
         }
         input.error, select.error, textarea.error {
             border-color: red;
@@ -52,8 +49,9 @@
             cursor: pointer;
             transition: background 0.3s;
         }
-        button:hover {
-            background: #45a049;
+        button:disabled {
+            background: gray;
+            cursor: not-allowed;
         }
         fieldset {
             border: 1px solid #ddd;
@@ -78,18 +76,18 @@
 <div class="signup-form">
     <fieldset>
         <legend>Sign-Up Information</legend>
-        <form id="signupForm" onsubmit="return submitForm()">
+        <form id="signupForm" oninput="checkFormValidity()" onsubmit="return submitForm()">
             <div class="form-group">
-                <label for="name">Full Name </label>
-                <input type="text" id="name" name="name" onblur="validateInput(this)" onfocus="resetBorder(this)">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required onblur="validateField(this)" onfocus="resetBorder(this)">
             </div>
             <div class="form-group">
                 <label for="username">Preferred Username (ex: kiomamoks, naj_kjm)</label>
-                <input type="text" id="username" name="username" onblur="validateInput(this)" onfocus="resetBorder(this)">
+                <input type="text" id="username" name="username" required onblur="validateField(this)" onfocus="resetBorder(this)">
             </div>
             <div class="form-group">
                 <label for="gender">Gender</label>
-                <select id="gender" name="gender" onblur="validateInput(this)" onfocus="resetBorder(this)">
+                <select id="gender" name="gender" required onblur="validateField(this)" onfocus="resetBorder(this)">
                     <option value="">Select</option>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
@@ -98,22 +96,22 @@
             </div>
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" onblur="validateInput(this)" onfocus="resetBorder(this)">
+                <input type="password" id="password" name="password" required onblur="validateField(this)" onfocus="resetBorder(this)">
             </div>
             <div class="form-group">
                 <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" onblur="validateInput(this)" onfocus="resetBorder(this)">
+                <input type="email" id="email" name="email" required onblur="validateField(this)" onfocus="resetBorder(this)">
             </div>
             <div class="form-group">
                 <label for="address">Address</label>
-                <textarea id="address" name="address" rows="2" onblur="validateInput(this)" onfocus="resetBorder(this)"></textarea>
+                <textarea id="address" name="address" required onblur="validateField(this)" onfocus="resetBorder(this)"></textarea>
             </div>
             <div class="form-group">
-                <label for="interests">Write a short paragraph about your interests! </label>
-                <textarea id="interests" name="interests" rows="3" onblur="validateInput(this)" onfocus="resetBorder(this)"></textarea>
+                <label for="interests">Write a short paragraph about your interests!</label>
+                <textarea id="interests" name="interests" rows="3" required onblur="validateField(this)" onfocus="resetBorder(this)"></textarea>
             </div>
             <div class="form-group">
-                <button type="submit">Submit</button>
+                <button id="submitButton" type="submit">Submit</button>
                 <button type="reset" onclick="clearOutput()">Reset</button>
             </div>
         </form>
@@ -127,19 +125,35 @@
 </div>
 
 <script>
-function validateInput(element) {
-    if (element.value.trim() === "") {
-        element.classList.add("error");
-        element.classList.remove("valid");
+function validateField(field) {
+    if (!field.validity.valid) {
+        field.classList.add("error");
+        field.classList.remove("valid");
     } else {
-        element.classList.remove("error");
-        element.classList.add("valid");
+        field.classList.remove("error");
+        field.classList.add("valid");
     }
 }
 
-function resetBorder(element) {
-    element.classList.remove("error");
-    element.classList.remove("valid");
+function resetBorder(field) {
+    field.classList.remove("error");
+    field.classList.remove("valid");
+}
+
+function checkFormValidity() {
+    const form = document.getElementById("signupForm");
+    const submitButton = document.getElementById("submitButton");
+
+    let allValid = true;
+
+    for (const field of form.elements) {
+        if (field.type !== "submit" && !field.validity.valid) {
+            allValid = false;
+            break;
+        }
+    }
+
+    submitButton.disabled = !allValid;
 }
 
 function submitForm() {
@@ -166,7 +180,7 @@ function submitForm() {
 
     output.innerHTML = outputHtml;
 
-    return false; 
+    return false;
 }
 
 function clearOutput() {
