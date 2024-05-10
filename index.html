@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> Sign-Up Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: linear-gradient(90deg, hsla(40, 63%, 85%, 1) 0%, hsla(22, 94%, 79%, 1) 100%);
+
+        }
+        .signup-form {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: border 0.3s;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: #00b0f0;
+        }
+        input.error, select.error, textarea.error {
+            border-color: red;
+        }
+        input.valid, select.valid, textarea.valid {
+            border-color: green;
+        }
+        button {
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        fieldset {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        legend {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        #output {
+            background: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="signup-form">
+    <fieldset>
+        <legend>Sign-Up Information</legend>
+        <form id="signupForm" onsubmit="return submitForm()">
+            <div class="form-group">
+                <label for="name">Full Name </label>
+                <input type="text" id="name" name="name" onblur="validateInput(this)" onfocus="resetBorder(this)">
+            </div>
+            <div class="form-group">
+                <label for="username">Preferred Username (ex: kiomamoks, naj_kjm)</label>
+                <input type="text" id="username" name="username" onblur="validateInput(this)" onfocus="resetBorder(this)">
+            </div>
+            <div class="form-group">
+                <label for="gender">Gender</label>
+                <select id="gender" name="gender" onblur="validateInput(this)" onfocus="resetBorder(this)">
+                    <option value="">Select</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="prefer_not_to_say">Prefer Not to Mention</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" onblur="validateInput(this)" onfocus="resetBorder(this)">
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" onblur="validateInput(this)" onfocus="resetBorder(this)">
+            </div>
+            <div class="form-group">
+                <label for="address">Address</label>
+                <textarea id="address" name="address" rows="2" onblur="validateInput(this)" onfocus="resetBorder(this)"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="interests">Write a short paragraph about your interests! </label>
+                <textarea id="interests" name="interests" rows="3" onblur="validateInput(this)" onfocus="resetBorder(this)"></textarea>
+            </div>
+            <div class="form-group">
+                <button type="submit">Submit</button>
+                <button type="reset" onclick="clearOutput()">Reset</button>
+            </div>
+        </form>
+    </fieldset>
+    
+    <fieldset>
+        <legend>Submitted Information</legend>
+        <div id="output">
+        </div>
+    </fieldset>
+</div>
+
+<script>
+function validateInput(element) {
+    if (element.value.trim() === "") {
+        element.classList.add("error");
+        element.classList.remove("valid");
+    } else {
+        element.classList.remove("error");
+        element.classList.add("valid");
+    }
+}
+
+function resetBorder(element) {
+    element.classList.remove("error");
+    element.classList.remove("valid");
+}
+
+function submitForm() {
+    const form = document.getElementById("signupForm");
+    const output = document.getElementById("output");
+
+    const name = form["name"].value;
+    const username = form["username"].value;
+    const gender = form["gender"].value;
+    const password = form["password"].value;
+    const email = form["email"].value;
+    const address = form["address"].value;
+    const interests = form["interests"].value;
+
+    const outputHtml = `
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Preferred Username:</strong> ${username}</p>
+        <p><strong>Gender:</strong> ${gender}</p>
+        <p><strong>Password:</strong> (hidden)</p>
+        <p><strong>Email Address:</strong> ${email}</p>
+        <p><strong>Address:</strong> ${address}</p>
+        <p><strong>Short Paragraph on Interests:</strong> ${interests}</p>
+    `;
+
+    output.innerHTML = outputHtml;
+
+    return false; 
+}
+
+function clearOutput() {
+    const output = document.getElementById("output");
+    output.innerHTML = "";
+}
+
+</script>
+
+</body>
+</html>
